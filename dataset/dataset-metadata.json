@@ -1,0 +1,140 @@
+{
+  "agent": "GLM (Worker-1, P5 extraction)",
+  "artifact_type": "failure-dataset",
+  "created_utc": "2026-09-15T18:22:29Z",
+  "data": {
+    "artifact": "p5-failure-dataset",
+    "classifier_1_note": "Labels in this file are classifier-1's v1.2 application, promoted into records.jsonl at dataset v1.1 after the kappa audit post-seal go (iteration-2 cause_class kappa 0.9649 pre-adjudication, phase and detection_layer 1.0000 on 40/40; F-043 cause adjudicated to resource_blindness). Ambiguity flags in notes are retained as calibration history.",
+    "description": "Failure Taxonomy of an Agent-Run Lab (P5): structured records of every documented failure extractable from the flashnext daily logs, TimesFM project notes, Job Killer docs, and the sprint's own review cycles (Sep 11-15, 2026). One record per documented failure event or documented defect cluster. All numbers transcribed from the cited source files only; costs are null unless a source states one.",
+    "determinism_proof": {
+      "external_check": {
+        "current_matches_expected": true,
+        "expected_sha256": "6c10e35767fceaadc5091e745876293b702f66d33062c31267547b6ef510a3ee",
+        "sidecar": "review-tmp\\det-run1\\records.jsonl",
+        "sidecar_matches_expected": false,
+        "sidecar_note": "sidecar preserves the v1.0 records bytes (1566e7dc...bc456); expected value updated at the v1.1 post-seal label promotion, so the sidecar match is False by design - the v1.0 bytes remain externally evidenced by the sidecar and by kappa-audit-trail.json",
+        "sidecar_sha256": "1566e7dcdf7a0a0b8445b91c642d420638cf1f8dc5ffde7626dca5f068bbc456"
+      },
+      "match": true,
+      "note": "records.jsonl hashed as written by this run; the bytes depend only on failures-source.json. Hardened per audit iteration 1 (fix 1c): the proof is anchored to an EXTERNALLY-observed digest (EXTERNAL_EXPECTED_RECORDS_SHA256, preserved by Reviewer-1 in review-tmp/det-run1 and det-run2), re-verified against the persisted sidecar when present. Records are never edited in place; any content change requires a version bump and a new externally-pinned constant.",
+      "run1_sha256": "6c10e35767fceaadc5091e745876293b702f66d33062c31267547b6ef510a3ee",
+      "run2_sha256": "6c10e35767fceaadc5091e745876293b702f66d33062c31267547b6ef510a3ee"
+    },
+    "field_counts": {
+      "cause_class": {
+        "credential_exposure": 1,
+        "environment_drift": 17,
+        "precision_overclaim": 4,
+        "resource_blindness": 12,
+        "retrieval_failure": 8,
+        "self_confirmation": 1,
+        "spec_drift": 16,
+        "verification_gap": 46
+      },
+      "detection_layer": {
+        "reviewer_caught": 33,
+        "self_caught": 72
+      },
+      "phase": {
+        "build": 35,
+        "ops": 25,
+        "spec": 18,
+        "verify": 27
+      },
+      "source_project": {
+        "flashnext": 33,
+        "job-killer": 5,
+        "sprint-review": 60,
+        "timesfm": 7
+      }
+    },
+    "kappa_sample": {
+      "method": "N > 40, so a stratified random sample of 40 records, stratified proportionally by source_project (largest-remainder allocation), drawn with random.Random(20260914).sample over record_ids sorted ascending within each stratum.",
+      "record_ids": [
+        "P5-F-001",
+        "P5-F-010",
+        "P5-F-012",
+        "P5-F-019",
+        "P5-F-021",
+        "P5-F-022",
+        "P5-F-024",
+        "P5-F-027",
+        "P5-F-028",
+        "P5-F-030",
+        "P5-F-032",
+        "P5-F-033",
+        "P5-F-041",
+        "P5-F-043",
+        "P5-F-044",
+        "P5-F-051",
+        "P5-F-054",
+        "P5-F-062",
+        "P5-F-063",
+        "P5-F-065",
+        "P5-F-066",
+        "P5-F-071",
+        "P5-F-073",
+        "P5-F-075",
+        "P5-F-077",
+        "P5-F-079",
+        "P5-F-081",
+        "P5-F-082",
+        "P5-F-083",
+        "P5-F-084",
+        "P5-F-093",
+        "P5-F-094",
+        "P5-F-095",
+        "P5-F-097",
+        "P5-F-099",
+        "P5-F-106",
+        "P5-F-112",
+        "P5-F-113",
+        "P5-F-115",
+        "P5-F-116"
+      ],
+      "seed": 20260914,
+      "sha256": "70eb5d8bb9722a361ec7d94cc75539602786440c25be41b1975f5c7097db0e0a",
+      "size": 40
+    },
+    "license_note": "research use only - records P5-F-001..F-033 and the sprint-review records are drawn from work derived from orcarouter uncensored-weights artifacts (trap #9 line); TimesFM/Job Killer records carry no weight-derived content.",
+    "record_count": 105,
+    "records_sha256": "6c10e35767fceaadc5091e745876293b702f66d33062c31267547b6ef510a3ee",
+    "version": "1.1"
+  },
+  "environment": {
+    "cpu": null,
+    "driver": "n/a (extraction only)",
+    "engine_sha": "n/a (no engine involved)",
+    "gpu": null,
+    "os_build": "Windows 10.0.26200 x64 (Git Bash)",
+    "python": "3.12.10",
+    "ram_speed_mts": null
+  },
+  "inputs": {
+    "repos": [],
+    "scripts": [
+      {
+        "path": "glm/work/p5/tools/build_dataset.py",
+        "sha256": "c470293d40b93c5136da13bf452e711d49b8fec49dd0c13dbe18203c18fff5df"
+      },
+      {
+        "path": "glm/work/p5/work-tmp/failures-source.json",
+        "sha256": "a5f25049f12bf74ab71b4df396893bad224be93a6c62dcde68a09f56c6c58e1c"
+      }
+    ],
+    "source_files_note": "read-only sources cited per-record in records.jsonl citation.file/entry"
+  },
+  "method": {
+    "extraction": "read-only extraction from 4 flashnext daily logs, TimesFM CONTEXT + 3 cited notes, 7 Job Killer docs, and 23 sprint review-cycle files; one record per documented failure; single-pass classification by classifier #1 with ambiguity flags",
+    "kappa_sample": "N > 40, so a stratified random sample of 40 records, stratified proportionally by source_project (largest-remainder allocation), drawn with random.Random(20260914).sample over record_ids sorted ascending within each stratum.",
+    "ordering": "record_id ascending",
+    "serialization": "compact JSON, sorted keys, fixed field order, UTF-8, LF newlines, trailing newline"
+  },
+  "mission_brief": "BRIEF-20260914-sprint-p5-failure-taxonomy.md",
+  "provenance": {
+    "measured_vs_estimated": "3 measured costs (P5-F-028 30.6 h; P5-F-040 192 h; P5-F-107 0.5 h), 1 estimate (P5-F-025, 18-30 h, labeled in its source), 101 null. Note: F-028's 30.6 h/arm is inherited verbatim from its source (glm/daily/DAILY-2026-09-14.md, Stage 3 DEVIATION D2); the source's own arithmetic 196 s x 576 windows computes to 31.36 h - discrepancy disclosed, the source's stated figure retained",
+    "regime": "n/a (text extraction, no quantized artifacts)",
+    "sample_N": 105
+  },
+  "schema_note": "E-P5-1: 'failure-dataset' (and per-line 'failure-record') extend the BRIEF-20260912 section-3 artifact_type enum; declared here per steward policy rather than silently assumed. Orchestrator amendment requested."
+}

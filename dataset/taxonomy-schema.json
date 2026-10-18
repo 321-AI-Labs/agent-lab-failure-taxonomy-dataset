@@ -1,0 +1,221 @@
+{
+  "envelope": {
+    "artifact_type": "taxonomy-schema",
+    "schema_note": "E-P5-1: 'taxonomy-schema' extends the BRIEF-20260912 section-3 artifact_type enum (declared, orchestrator amendment requested under the same escalation as the failure-dataset extension).",
+    "created_utc": "2026-09-15T17:20:00Z",
+    "agent": "GLM (Worker-1, P5 extraction)",
+    "mission_brief": "BRIEF-20260914-sprint-p5-failure-taxonomy.md",
+    "inputs": {
+      "repos": [],
+      "scripts": [],
+      "source_files_note": "v1.0 classes from BRIEF-20260914 section 3; v1.1 revision from the kappa audit iteration 0 disagreement structure (glm/work/p5/review-tmp/kappa-result.txt: cause_class 0.728, phase 0.458, detection_layer 0.946) per Reviewer-1 APPROVE-WITH-FIXES work order"
+    },
+    "environment": {
+      "os_build": "Windows 10.0.26200 x64 (Git Bash)",
+      "driver": "n/a (extraction only)",
+      "ram_speed_mts": null,
+      "engine_sha": "n/a (no engine involved)",
+      "cpu": null,
+      "gpu": null
+    },
+    "method": {
+      "construction": "v1.0: brief section-3 classes + decision rules from the 105-record corpus. v1.1 (audit iteration 1): phase re-anchored to where the defect LIVES; verification_gap narrowed with explicit boundary rules and worked examples; other:credential-exposure PROMOTED to full class credential_exposure (dual-classifier agreement 1.0 on the single member); detection_layer steward-own-tool tie-break clarified; late_detection deferred to v1.1-optional schema note. Records.jsonl still carries iteration-0 labels until the orchestrator's post-seal go; iteration-1 classifier-1 labels are sealed in work-tmp/kappa-classifier1-iter1.jsonl.",
+      "audit_protocol": "dual independent classification of kappa-input-sample.jsonl (classifier #1 = worker; classifier #2 = orchestrator's reviewer, classifying ONLY from the stripped sample) -> Cohen's kappa -> taxonomy iterated until kappa >= 0.8; iterations logged in kappa-audit-trail.json; PROPOSED classes promoted or killed by the audit"
+    },
+    "data": {
+      "vocabularies": ["phase", "cause_class", "detection_layer"],
+      "taxonomy_version": "1.2"
+    },
+    "provenance": {
+      "measured_vs_estimated": "decision rules are analytic statements derived from the extracted corpus and the iteration-0/1 disagreement tables; no measured quantities",
+      "sample_N": 105,
+      "regime": "n/a (text extraction, no quantized artifacts)"
+    }
+  },
+  "taxonomy_version": "1.2",
+  "revision_history": [
+    {
+      "version": "1.0",
+      "iteration": 0,
+      "schema_sha256": "a1a33e525d06b199a3c4cca487f0d8670dd092aeafcadc6570acdec95e49e825",
+      "note": "initial vocabulary from brief section 3; classified by classifier-1 into records.jsonl (labels sealed, records.jsonl sha 1566e7dc...bc456)"
+    },
+    {
+      "version": "1.1",
+      "iteration": 1,
+      "schema_sha256": "06aaa3d4bda27271c0e3acd035b6ca4c62c39170961898904832d5496513d27e",
+      "trigger": "kappa iteration 0 below 0.8 target on cause_class (0.728) and phase (0.458); detection_layer 0.946 near target",
+      "changes": [
+        "phase: re-anchored from 'where the failure surfaced' to 'where the defect LIVES' (the artifact/process that is defective); worked examples added",
+        "cause_class: verification_gap narrowed (no longer a catch-all); three explicit boundary rules with worked examples encoded (ERR-as-0 -> precision_overclaim; document-vs-reality -> spec_drift; unaccounted token burn -> resource_blindness); global tie-break order added",
+        "cause_class: other:credential-exposure PROMOTED to full class credential_exposure (dual-classifier agreement 1.0); proposed_classes_active now empty",
+        "detection_layer: clarified that a steward/reviewer-role agent catching defects in its OWN tooling is self_caught relative to that tool (worked example added)",
+        "late_detection modifier: NOT added; schema-noted as optional v1.1 candidate",
+        "field_notes.cost: corrected tally (3 measured / 1 estimate / 101 null) + F-028 source-arithmetic note"
+      ]
+    },
+    {
+      "version": "1.2",
+      "iteration": 2,
+      "schema_sha256": "recorded externally in kappa-audit-trail.json revision 2 (a file cannot contain its own digest)",
+      "trigger": "kappa iteration 1: cause_class 0.9649 PASS, detection_layer 1.0000 PASS, phase 0.7922 BELOW target by 0.008 (34/40)",
+      "changes": [
+        "phase ONLY. verify belongs-list extended with 'measured data products' beside registries/summaries/envelopes/proofs (NaN from degenerate 0/0 in a recorded data product = recorded output -> verify)",
+        "phase: three explicit boundary rules added with worked examples (R1 capability/tool absence that blocks an activity -> ops; R2 anchor on the record's subject: check session degraded by external conditions with controls intact -> verify, obtained external artifact not what it claims -> ops; R3 binding quota/cap mis-enforced by code -> build)",
+        "F-084-type: NOT a schema change - v1.1 literal already covers stale recorded hashes in determinism proofs -> verify; iteration-1 label was a classifier application error, corrected in iteration-2 labels and noted in kappa-audit-trail.json"
+      ]
+    }
+  ],
+  "vocabularies": {
+    "phase": {
+      "description": "REVISED (iteration 1; boundary rules added iteration 2): anchor on WHERE THE DEFECT LIVES - the spec/build/verify/ops artifact or process that is defective - NOT where the failure surfaced, was noticed, or was caught. Exactly one value per record. The iteration-2 boundary rules (R1-R3, below) take precedence over the v1.1 generic instrument reading wherever they apply.",
+      "values": {
+        "spec": {
+          "belongs": "The defective artifact is a governing/design/protocol DOCUMENT or plan: briefs, specs, preregistrations, authorizations and their estimates, protocols, design assumptions, documentation whose stated content diverges from reality (wrong pointers, stale figures, arithmetic slips, two documents disagreeing).",
+          "does_not_belong": "Constructed code/config content that was merely built badly (build); checking instruments and their recorded outputs (verify); execution-layer failures (ops).",
+          "tie_break": "Ask 'which artifact is wrong?'. If the answer is a document's CONTENT (it says X, reality is Y), spec - even if a build/verify activity surfaced it. If the document is right and code diverges from it, not spec."
+        },
+        "build": {
+          "belongs": "The defective artifact is CONSTRUCTED content: scripts, generators, builders, rules encoded in code, code written against unvalidated assumptions, and - per iteration-2 rule R3 - binding quota/cap ENFORCEMENT LOGIC that mis-enforces (the enforcement code is the defective artifact; the breach it allowed is evidence).",
+          "does_not_belong": "Defects in checking/recording instruments as instruments or in their recorded outputs/data products (verify); document-content defects (spec); runtime/execution-layer failures and blocking capability absences (ops).",
+          "tie_break": "R3 worked example (iteration 2): a per-judge day cap enforced per-class instead of cumulatively, letting the smoke breach 11 vs 10 -> build (the enforcement logic is the defective artifact; the breach is evidence). Contrast: a cap/check whose logic is correct but whose recorded output is wrong stays verify. A mis-budgeted run/config resource (e.g. frozen max_tokens vs thinking burn) is also build - the config is the defective artifact."
+        },
+        "verify": {
+          "belongs": "The defective artifact is a checking/measuring/RECORDING instrument, its recorded outputs, or its MEASURED DATA PRODUCTS: validators, classifiers, metrics, rubrics, gates, liveness checks, header scans, value-recording registries/summaries/envelopes/determinism proofs, and measured data products recorded by such instruments (wrong denominators, ERR transcribed as 0, stale recorded hashes, degenerate thresholds, vacuous 0/0 results poisoning a recorded data product) - even though such instruments are themselves coded during build activities.",
+          "does_not_belong": "The defect under inspection (that lives in build/spec/ops); quota/cap enforcement logic that mis-enforces (build, R3); runtime/execution-layer failures and blocking capability absences (ops).",
+          "tie_break": "Worked examples: a value-recording registry built wrong (ERR rows transcribed as hits:0) -> verify; a header-scan instrument recording wrong dtype claims -> verify; a degenerate gate printing 0/0 on empty input -> verify; NaN from degenerate 0/0 written into a recorded data product -> verify (recorded output, iteration 2); a determinism proof embedding stale recorded hashes -> verify (v1.1 literal; the iteration-1 build label for this case was a classifier application error, corrected in iteration-2 labels). If the record's subject is 'the check/record/data product said X and X was wrong/absent', verify."
+        },
+        "ops": {
+          "belongs": "The defective layer is EXECUTION/run-time or the environment an activity depends on: serving, downloading, scheduling, machine contention, resource exhaustion at runtime of EXTERNAL tools, external-tool runtime crashes, path/OS traps during execution, credential handling during operations, collection services corrupting data at run time, and - per iteration-2 rule R1 - a capability/tool ABSENCE that BLOCKS an activity (the defect lives in the environment; no defective agent artifact exists), and - per rule R2 - an obtained external artifact that is not what it claims to be.",
+          "does_not_belong": "Runtime exhaustion caused by one's own code/config budgeting (build, per the tie-break below); document defects (spec); instrument/data-product defects (verify).",
+          "tie_break": "Worked examples: an external pinned converter crashing at load with ValueError -> ops; machine contention from other tenants -> ops; MSYS /tmp not resolving for native Python at execution -> ops. R1 worked example (iteration 2): MSI packaging blocked because WiX is not installed on the machine -> ops (blocking capability absence; no defective agent artifact). R2 worked example (iteration 2): an external 'abliterated' checkpoint failing its anchor gate because it does not match its claimed base twin -> ops (the artifact in use is not what it claims). Contrast (R2): a check session degraded by external conditions while its controls remain intact is verify - the checking process is the subject and it worked. Runtime exhaustion of a resource one's OWN code/config mis-budgeted keeps the earlier phase (build for configs/code, spec for protocol math)."
+        }
+      },
+      "iteration_2_boundary_rules": [
+        {
+          "id": "R1",
+          "rule": "A capability/tool ABSENCE that BLOCKS an activity is ops: the defect lives in the environment and no defective agent artifact exists.",
+          "worked_example": "MSI packaging remains a known gap because WiX is not present on the machine -> ops (blocks the packaging activity; nothing the agent built is defective). Contrast: a present tool crashing at runtime is also ops (v1.1 example); a tool the agent built that misbehaves is build/verify per the instrument/data-product rules."
+        },
+        {
+          "id": "R2",
+          "rule": "Anchor on the record's SUBJECT: a check/search/measurement session degraded by external conditions while its controls remain intact -> verify (the checking process is the subject and it worked); an obtained external artifact that is not what it claims -> ops (the defective thing is the artifact in use, not the checking layer that caught it).",
+          "worked_example": "A rarity battery degraded by engine throttling/403s with positive controls barring false zeros -> verify; an external checkpoint failing its anchor gate because it differs from its claimed base twin -> ops."
+        },
+        {
+          "id": "R3",
+          "rule": "A binding quota/cap mis-enforced by CODE is build: the enforcement logic is the defective artifact; the breach it allowed is evidence, not the defect.",
+          "worked_example": "A per-judge day cap enforced per-class instead of cumulatively (smoke breached 11 vs 10) -> build. Contrast: a cap/check whose logic is correct but whose recorded output is wrong stays verify."
+        }
+      ]
+    },
+    "cause_class": {
+      "description": "Single dominant root-cause class. Exactly one value; residual candidates flagged in notes as kappa calibration data. REVISED (iteration 1): verification_gap is NOT a catch-all - run the tie-break order below and only land on verification_gap if no earlier rule fires and the defect is checking-shaped.",
+      "tie_break_order": [
+        "1. Finite resource consumed but unaccounted (VRAM, RAM, disk, compute time, TOKENS, budget bytes/percent)? -> resource_blindness",
+        "2. A definite value/verdict recorded or carried where truth was unknown or different (ERR transcribed as hits:0; estimator artifacts read as physics; unverified estimates entering authorizations)? -> precision_overclaim",
+        "3. Document/spec/protocol content diverging from reality (stale figures, wrong pointers, documented rule != actual behavior, two documents disagreeing, arithmetic slips in briefs)? -> spec_drift",
+        "4. A success claim resting on the agent's own broken or uncontrolled verification? -> self_confirmation",
+        "5. Failure to obtain or bind the right external thing (gated/401/403/404, deleted repos, dead URLs, wrong reference file compared, token scope)? -> retrieval_failure",
+        "6. Execution environment differing from assumptions (contention, missing tools, third-party tool bugs, upstream limitations, external artifacts not matching their documentation, throttling)? -> environment_drift",
+        "7. A secret/credential exposed to observation without confirmed compromise? -> credential_exposure",
+        "8. Else, if the defect is checking-shaped (a check missing, unwired, unexercised, or too coarse)? -> verification_gap",
+        "9. Nothing fits? -> other:<slug>, marked PROPOSED in notes; the kappa audit promotes or kills it"
+      ],
+      "values": {
+        "verification_gap": {
+          "belongs": "A CHECK was missing, unwired, opt-in instead of enforced, added but never exercised, or too coarse: unwired code paths, unexercised parameters, untested end-to-end wiring, degenerate/unvalidated instrument behavior, missing guards or assertions, metadata-contract compliance not checked before submission.",
+          "does_not_belong": "Wrong definite values recorded (precision_overclaim); document content contradicting reality (spec_drift); unaccounted resource/token burn (resource_blindness); success claims on own broken evidence (self_confirmation).",
+          "tie_break": "Must be checking-shaped: name the check that was missing/misfiring. Worked examples: an opt-in ctx guard -> verification_gap; output-path param added but never exercised -> verification_gap; degradation policy recorded but apply_degradation never called -> verification_gap. NON-examples (iteration 1): ERR (403) transcribed as hits:0 -> precision_overclaim; README count stale + wrong spec pointer -> spec_drift; thinking-mode token burn vs frozen max_tokens -> resource_blindness."
+        },
+        "resource_blindness": {
+          "belongs": "A finite resource was consumed but not accounted when planning or configuring: VRAM/RAM/disk budgets, compute-time-infeasible protocol bases, class-wide floors exceeding byte budgets, and TOKEN burn (e.g. a thinking template exhausting a frozen max_tokens budget).",
+          "does_not_belong": "External contention nobody budgeted (environment_drift); missing tools (environment_drift).",
+          "tie_break": "Worked example (iteration 1): model burns all 256 tokens thinking, empty content (F-027/F-081-type) -> resource_blindness, NOT verification_gap: the budget simply did not account the burn."
+        },
+        "spec_drift": {
+          "belongs": "Document/spec/protocol content diverges from reality or from what was built: wrong design assumptions, stale figures propagating into artifacts, documented rules that the code does not actually follow, wrong cross-references/pointers in specs, two documents disagreeing, dimensionally-wrong formulas, brief arithmetic slips.",
+          "does_not_belong": "Coding errors against a correct spec (verification_gap, if checking-shaped); wrong recorded INSTRUMENT values that are not document claims (precision_overclaim).",
+          "tie_break": "Worked examples (iteration 1): documented record_id rule verifies 0/94 records because code nulls the id first (documented rule != behavior) -> spec_drift; stale README test count + wrong selfpref items_file pointer -> spec_drift; two documents disagreeing on the accepted-set size -> spec_drift. A document right when written that later went stale through missed maintenance is verification_gap (the maintenance check was missing), not spec_drift."
+        },
+        "self_confirmation": {
+          "belongs": "The agent recorded or relied on evidence of success generated from its own uncontrolled or incorrect verification (false replay claims, mechanism demos that demo nothing, batteries without controls).",
+          "does_not_belong": "A broken instrument overclaiming regardless of claim direction (precision_overclaim); a simply-missing check (verification_gap).",
+          "tie_break": "Was there a success-claim resting on the agent's own evidence? Yes -> self_confirmation."
+        },
+        "retrieval_failure": {
+          "belongs": "Failure to obtain or bind the right external thing: gated/401/403/404 resources, deleted repos, dead URLs, wrong reference files compared against, token scope, wrong task-to-artifact mapping, folklore citations.",
+          "does_not_belong": "Missing local tooling or capabilities (environment_drift); failing to check something already held (verification_gap).",
+          "tie_break": "Artifact exists but fetched/compared/paired wrongly, or cannot be obtained at all -> retrieval_failure; environment lacks a capability -> environment_drift."
+        },
+        "environment_drift": {
+          "belongs": "The execution environment differs from what the plan/code assumed: machine contention, OS/shell traps, missing tools (Docker, WiX), third-party tool bugs, upstream software limitations, external artifacts or repos not matching their documentation, platform instability, throttling/rate limits.",
+          "does_not_belong": "Resource shortfalls from one's own budgeting (resource_blindness); access denials to specific artifacts (retrieval_failure).",
+          "tie_break": "External world not matching assumptions -> environment_drift."
+        },
+        "precision_overclaim": {
+          "belongs": "A number, verdict, or transcription carried more certainty than warranted: estimator artifacts read as physics, definite values recorded where truth was unknown or different (ERR transcribed as hits:0), unverified estimates entering authorizations/records, wrong definite figures asserted in prose (element-count typos, wrong hunk counts).",
+          "does_not_belong": "Wrong values from buggy logic with no certainty claim (verification_gap); success-claims from self-referential evidence (self_confirmation).",
+          "tie_break": "Worked example (iteration 1): DDG rows recording ERR (403) as hits: 0 -> precision_overclaim, per the explicit boundary rule; a review asserting 'exactly 3 hunks' when there are 4 -> precision_overclaim."
+        },
+        "credential_exposure": {
+          "status": "FULL CLASS (promoted from PROPOSED other:credential-exposure at audit iteration 1; dual-classifier iteration-0 agreement 1.0 on its single member)",
+          "belongs": "A secret/credential/token was exposed to observation (on-screen, in logs, in shared artifacts) WITHOUT a confirmed compromise event; the associated duty is rotation/hygiene. The record must disclose the exposure incident and the rotation/hygiene disposition, never the secret itself.",
+          "does_not_belong": "Actual credential compromise or misuse (out of dataset scope); failed authenticated fetches (retrieval_failure); secrets handled per protocol with no exposure (not a failure).",
+          "tie_break": "retrieval_failure requires a failed fetch; environment_drift requires a wrong environment assumption; neither covers hygiene incidents - that gap is exactly what this class covers."
+        },
+        "other:<slug>": {
+          "status": "PROPOSED - created only when a documented failure fits NO class after the tie-break order; must be marked PROPOSED in the record notes; the kappa audit promotes or kills each proposal.",
+          "belongs": "Only documented failures with no defensible home in the eight classes above.",
+          "does_not_belong": "Anything resolvable via the tie-break order with a flagged ambiguity - prefer flagging.",
+          "tie_break": "Write the decision rule the new class would need; the audit compares it against existing classes."
+        }
+      },
+      "proposed_classes_active": [],
+      "promotion_log": [
+        {
+          "iteration": 1,
+          "from": "other:credential-exposure",
+          "to": "credential_exposure",
+          "evidence": "dual-classifier iteration-0 agreement 1.0 (both classifiers assigned the proposal to its sole member P5-F-033); member count 1",
+          "label_flip": "pending orchestrator post-seal go (records.jsonl still carries the other: string until labels are promoted)"
+        }
+      ]
+    },
+    "detection_layer": {
+      "description": "Which layer first CAUGHT the failure (not which layer committed it). Exactly one value.",
+      "values": {
+        "self_caught": {
+          "belongs": "The agent that owned the failed work caught it - including via its own smoke tests, gates, positive controls, dry-runs, reconciliation, honest self-disclosure - before or after shipping. CLARIFIED (iteration 1): this includes a data steward/reviewer-role agent catching defects in its OWN tooling (the owner of the tool caught it); the owning agent of the failed artifact is whoever produced the thing that failed.",
+          "does_not_belong": "Failures first surfaced by a genuinely separate second context over the owner's artifact.",
+          "tie_break": "Worked example (iteration 1): a steward's validator flags 3 FAILs that are all validator defects, caught when the steward reruns/inspects its own validator -> self_caught (the steward owns the validator; no second context reviewed the steward). Worked example (counter-case): a worker's item builder defect caught by the adversarial reviewer's scripted audit -> reviewer_caught."
+        },
+        "reviewer_caught": {
+          "belongs": "First caught by a genuinely separate context over the owner's artifact: adversarial reviewer, data steward, gatekeeper, or a blind second classifier - per the governance rule that a worker never reviews its own output.",
+          "does_not_belong": "The owner's own pre-review checks; a steward catching its own validator's bugs (self_caught, see above).",
+          "tie_break": "Both catch independently (e.g. reviewer + steward find the same defect): cite both, detection_layer = reviewer_caught (earliest independent context is a reviewer role)."
+        },
+        "owner_caught": {
+          "belongs": "First surfaced by the human owner (complaint, observation, or owner-side action revealing the failure).",
+          "does_not_belong": "Owner ACTIONS taken to FIX an already-caught failure (that is fix/escalation, not detection).",
+          "tie_break": "If the source text does not say who noticed, use the weakest defensible claim and note the uncertainty."
+        },
+        "escaped": {
+          "belongs": "The failure reached output/production and caused damage with NO layer catching it at the time (discovered only retrospectively by accident, or never by the lab).",
+          "does_not_belong": "Late but internal detection (that is self_caught/reviewer_caught with the delay noted in cost/notes).",
+          "tie_break": "If any in-lab layer eventually caught it, it did not escape - record the catching layer and put the delay in the cost note."
+        }
+      }
+    },
+    "optional_modifiers": {
+      "late_detection": {
+        "status": "NOT ADDED in iteration 1 - schema-noted as an OPTIONAL v1.1 candidate per reviewer work order. Would flag records where detection lagged the onset materially (e.g. P5-F-040: 8 days); currently such lag lives in cost.value/cost.note. Decision deferred to a later audit iteration; do not emit the field yet."
+      }
+    }
+  },
+  "field_notes": {
+    "cost": "value:number|null, unit:'tokens'|'hours'|'dollars'|null, basis:'measured'|'estimate'|null, note. Corrected tally (iteration 1): 3 measured (P5-F-028 30.6 h; P5-F-040 192 h; P5-F-107 0.5 h), 1 estimate (P5-F-025, 18-30 h, basis=estimate as labeled in its source), 101 null. F-028 note: the 30.6 h/arm figure is inherited verbatim from the source (glm/daily/DAILY-2026-09-14.md Stage 3 DEVIATION D2); the source's own arithmetic 196 s x 576 windows computes to 31.36 h - discrepancy disclosed, the source's stated figure retained (records.jsonl cost values are not edited).",
+    "one_record_per": "documented failure event or tightly-coupled defect cluster (e.g. one steward pass with N metadata rejections is one record; the cluster is disclosed in the description and notes)",
+    "ordering": "records sorted by record_id ascending; ids zero-padded P5-F-NNN and never reused"
+  }
+}

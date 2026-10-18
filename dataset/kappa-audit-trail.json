@@ -1,0 +1,316 @@
+{
+  "envelope": {
+    "artifact_type": "kappa-audit-trail",
+    "schema_note": "E-P5-1: 'kappa-audit-trail' extends the BRIEF-20260912 section-3 artifact_type enum (declared; same escalation as failure-dataset/taxonomy-schema).",
+    "created_utc": "2026-09-15T17:30:00Z",
+    "agent": "GLM (Worker-1, P5 extraction)",
+    "mission_brief": "BRIEF-20260914-sprint-p5-failure-taxonomy.md",
+    "inputs": {
+      "repos": [],
+      "scripts": [
+        {"path": "glm/work/p5/review-tmp/compute_kappa.py", "sha256": null, "note": "reviewer-owned script; hash not recomputed by classifier-1 (see sealed-labels note)"},
+        {"path": "glm/work/p5/review-tmp/kappa-classifier2-labels.jsonl", "sha256": null, "note": "classifier-2 labels; orchestrator-sealed (sha prefix 9c7cc035... as supplied); classifier-1 does not re-hash the sealed file"}
+      ],
+      "data_files_note": "iteration-0 classifier-1 labels are the phase/cause_class/detection_layer fields of failure-dataset/records.jsonl (sha256 1566e7dcdf7a0a0b8445b91c642d420638cf1f8dc5ffde7626dca5f068bbc456); the audit sample is failure-dataset/kappa-input-sample.jsonl (sha256 70eb5d8bb9722a361ec7d94cc75539602786440c25be41b1975f5c7097db0e0a)"
+    },
+    "environment": {
+      "os_build": "Windows 10.0.26200 x64 (Git Bash)",
+      "driver": "n/a (extraction only)",
+      "ram_speed_mts": null,
+      "engine_sha": "n/a (no engine involved)",
+      "cpu": null,
+      "gpu": null
+    },
+    "method": {
+      "protocol": "BRIEF-20260914 section 4: dual independent classification of the 40-record stratified sample (classifier #1 = worker, labels from records.jsonl iteration 0; classifier #2 = orchestrator's reviewer, blind labels from record_id+description+citation only), per-field unweighted Cohen's kappa, taxonomy iterated until kappa >= 0.8; every iteration logged here",
+      "kappa_computation": "reviewer-owned review-tmp/compute_kappa.py (stdlib; per-field kappa with agreement matrices and disagreement rows); classifier-1 transcribes the reviewer's reported values without recomputation",
+      "blinding": "classifier-1 iteration-1 labels are sealed in glm/work/p5/work-tmp/kappa-classifier1-iter1.jsonl and must not appear in records.jsonl, EXTRACTION-REPORT.md, or any file outside work-tmp until the orchestrator's post-seal go; taxonomy decision-rule revisions are public (sanctioned as audit input), per-record iteration-1 labels are not"
+    },
+    "data": {"iterations": 2, "status": "PROTOCOL SATISFIED - kappa >= 0.8 on all three fields at iteration 2 (cause_class 0.9649 pre-adjudication, phase 1.0000, detection_layer 1.0000); labels promoted to records.jsonl at dataset v1.1 after the orchestrator's post-seal go"},
+    "provenance": {
+      "measured_vs_estimated": "kappa values and agreement counts are measured outputs of compute_kappa.py over the sealed label files; all other content is process record",
+      "sample_N": 40,
+      "regime": "n/a (text extraction, no quantized artifacts)"
+    }
+  },
+  "audit_target": "kappa >= 0.8 per field (BRIEF-20260914 section 4)",
+  "iterations": [
+    {
+      "iteration": 0,
+      "date": "2026-09-15",
+      "schema": {
+        "taxonomy_version": "1.0",
+        "schema_sha256": "a1a33e525d06b199a3c4cca487f0d8670dd092aeafcadc6570acdec95e49e825"
+      },
+      "classifiers": {
+        "classifier_1": {
+          "role": "worker (GLM)",
+          "labels": "phase/cause_class/detection_layer fields of failure-dataset/records.jsonl (iteration-0 labels)",
+          "labels_sha256": "1566e7dcdf7a0a0b8445b91c642d420638cf1f8dc5ffde7626dca5f068bbc456"
+        },
+        "classifier_2": {
+          "role": "Reviewer-1 (orchestrator's adversarial reviewer)",
+          "labels": "review-tmp/kappa-classifier2-labels.jsonl, blind (record_id+description+citation only)",
+          "labels_sealed_sha256_prefix": "9c7cc035...",
+          "note": "full sealed digest held by the orchestrator; prefix transcribed as supplied"
+        }
+      },
+      "sample": {
+        "file": "failure-dataset/kappa-input-sample.jsonl",
+        "n": 40,
+        "sha256": "70eb5d8bb9722a361ec7d94cc75539602786440c25be41b1975f5c7097db0e0a"
+      },
+      "kappa": {
+        "cause_class": {"kappa": 0.7282, "agreement": "33/40", "verdict": "below 0.8 target"},
+        "phase": {"kappa": 0.4580, "agreement": "25/40", "verdict": "below 0.8 target"},
+        "detection_layer": {"kappa": 0.9459, "agreement": "39/40", "verdict": "near target"},
+        "micro_pooled": {"kappa": 0.7788, "agreement": "97/120"}
+      },
+      "disagreement_summary": "The largest disagreement mass sat in phase (kappa 0.458): classifier-1 anchored on the layer where a failure surfaced or was handled, while classifier-2 anchored on the artifact in which the defect lives, splitting repeatedly on instrument/recording defects (worker verify vs reviewer build), external-tool runtime crashes and environment traps (worker build/verify vs reviewer ops), and protocol-design defects (worker verify vs reviewer spec). cause_class disagreements (kappa 0.728) concentrated on verification_gap acting as a catch-all: two document-vs-reality mismatches (P5-F-079, P5-F-083) and two unaccounted token burns (P5-F-027, P5-F-081) were labeled verification_gap by classifier-1 where classifier-2 applied spec_drift and resource_blindness, with two value-precision cases (P5-F-001, P5-F-106) splitting toward precision_overclaim and one gate-failure case (P5-F-043) splitting the other way. detection_layer was near-ceiling (kappa 0.946) with a single split on P5-F-066, where the steward catching its own validator's defects was read as self_caught by classifier-1 and reviewer_caught by classifier-2.",
+      "reviewer_verdict": "APPROVE-WITH-FIXES (iteration-1 work order: 4 minor fixes, taxonomy revision per disagreement structure, reclassification of the 40 sample records under the revised schema)"
+    },
+    {
+      "iteration": 1,
+      "date": "2026-09-15",
+      "schema": {
+        "taxonomy_version": "1.1",
+        "schema_sha256": "06aaa3d4bda27271c0e3acd035b6ca4c62c39170961898904832d5496513d27e"
+      },
+      "classifiers": {
+        "classifier_1": {
+          "role": "worker (GLM)",
+          "labels": "work-tmp/kappa-classifier1-iter1.jsonl (40 rows, sample order, blinded until post-seal go)",
+          "labels_sha256": "9006e044b99d2b002dc3fc6b05feb105356f4ac8be0fd6f48378ead6ce99aa85"
+        },
+        "classifier_2": {
+          "role": "Reviewer-1",
+          "labels": "sealed iteration-1 label file (not read by classifier-1, per blinding)",
+          "labels_sealed_sha256_prefix": "797100b1...",
+          "note": "full sealed digest held by the orchestrator; prefix transcribed as supplied"
+        }
+      },
+      "sample": {
+        "file": "failure-dataset/kappa-input-sample.jsonl",
+        "n": 40,
+        "sha256": "70eb5d8bb9722a361ec7d94cc75539602786440c25be41b1975f5c7097db0e0a"
+      },
+      "kappa": {
+        "cause_class": {"kappa": 0.9649, "verdict": "PASS (>= 0.8)"},
+        "phase": {"kappa": 0.7922, "agreement": "34/40", "verdict": "BELOW target by 0.008 -> ITERATE"},
+        "detection_layer": {"kappa": 1.0, "verdict": "PASS (perfect agreement)"}
+      },
+      "disagreement_summary": "Iteration-1 disagreement was confined to the phase field (6 of 40 rows; cause_class and detection_layer passed, detection at perfect agreement). Per Reviewer-1's report as relayed by the orchestrator, the six splits concentrated on four boundary patterns: a blocking capability/tool absence read as build by classifier-1 vs ops by classifier-2 (the F-051 WiX-type case); a quota/cap mis-enforced by runner code read as verify by classifier-1 (runner-as-instrument) vs build by classifier-2 (F-077-type); a determinism proof embedding stale recorded hashes labeled build by classifier-1 despite the v1.1 literal already assigning stale recorded hashes in proofs to verify - an application error by classifier-1, not a schema defect (the F-084 case); and the anchoring pair where a check session degraded by external conditions with controls intact belongs to verify (F-065-type, agreed) while an obtained external artifact that is not what it claims belongs to ops (F-116-type, split). Classifier-1 did not read the sealed classifier-2 file; this summary transcribes Reviewer-1's report and the work-order instruction, and the remaining rows of the six are of the same four patterns.",
+      "reviewer_verdict": "ITERATE (phase-only; cause_class and detection_layer pass)"
+    },
+    {
+      "iteration": 2,
+      "date": "2026-09-15",
+      "schema": {
+        "taxonomy_version": "1.2",
+        "schema_sha256": "c405368acd21462b5edebe6f197e5e693df7b0439c1795dbb1b55cb7ba461bac"
+      },
+      "classifiers": {
+        "classifier_1": {
+          "role": "worker (GLM)",
+          "labels": "work-tmp/kappa-classifier1-iter2.jsonl (40 rows, sample order, blinded until post-seal go)",
+          "labels_sha256": "59663be8179c78e4d61f3652edeab72ccde96dd8320acaff3681dcfa10dc26c6"
+        },
+        "classifier_2": {
+          "role": "Reviewer-1",
+          "labels": "sealed iteration-2 label file (not read by classifier-1 before sealing)",
+          "labels_sealed_sha256": "575e795d314a5e0061e8c863d27ef8a9d622ba60d8daeefce4c68e5a80d5646c"
+        }
+      },
+      "sample": {
+        "file": "failure-dataset/kappa-input-sample.jsonl",
+        "n": 40,
+        "sha256": "70eb5d8bb9722a361ec7d94cc75539602786440c25be41b1975f5c7097db0e0a"
+      },
+      "kappa": {
+        "cause_class": {"kappa": 0.9649, "agreement": "39/40 (pre-adjudication)", "verdict": "PASS (>= 0.8)"},
+        "phase": {"kappa": 1.0, "agreement": "40/40", "verdict": "PASS"},
+        "detection_layer": {"kappa": 1.0, "agreement": "40/40", "verdict": "PASS"}
+      },
+      "disagreement_summary": "Phase and detection_layer reached perfect agreement (40/40 each) under taxonomy v1.2. The single residual cause_class split was P5-F-043 (classifier-1 environment_drift vs classifier-2 resource_blindness), adjudicated at post-seal by the orchestrator: cause_class = resource_blindness as the dominant root per tie-break rule 1 - the record's own note identifies it as the downstream consequence of the OOM spiral (P5-F-040) - with environment_drift retained in the record notes as the secondary frame. The sealed join of the two iteration-2 label files is identical on all three fields for all 40 records after this one adjudicated cell.",
+      "reviewer_verdict": "PASS - protocol satisfied; post-seal label promotion authorized (dataset v1.1)"
+    }
+  ],
+  "revisions": [
+    {
+      "revision": 1,
+      "date": "2026-09-15",
+      "from_taxonomy_version": "1.0",
+      "to_taxonomy_version": "1.1",
+      "schema_sha256_new": "06aaa3d4bda27271c0e3acd035b6ca4c62c39170961898904832d5496513d27e",
+      "decision_rule_changes": [
+        {
+          "field": "phase",
+          "old_rule": "phase anchored on where the failure originated OR surfaced; verify included 'pilots failing their gates' and measurement-adjacent failures generally",
+          "new_rule": "phase anchored strictly on WHERE THE DEFECT LIVES (the spec/build/verify/ops artifact or process that is defective), not where it surfaced or was caught",
+          "worked_examples_added": [
+            "value-recording registries/summaries built wrong (e.g. ERR transcribed as hits:0) -> verify",
+            "external-tool runtime crashes (e.g. pinned converter ValueError at load) -> ops",
+            "run/service configs that mis-budget resources (e.g. frozen max_tokens vs thinking-token burn) -> build",
+            "path/OS traps at execution (e.g. MSYS /tmp vs native Python) -> ops",
+            "document-content defects (stale figures, wrong pointers, rule != behavior) -> spec"
+          ]
+        },
+        {
+          "field": "cause_class",
+          "old_rule": "verification_gap defined broadly (missing, untested, unexercised, or too coarse checking) and effectively served as the residual class",
+          "new_rule": "verification_gap narrowed to checking-shaped defects only, reached via an explicit 9-step tie-break order; three boundary rules encoded with worked examples: ERR-count transcribed as hits:0 -> precision_overclaim (P5-F-063-type); document-vs-reality mismatch -> spec_drift (P5-F-079/F-083-type); unaccounted token burn -> resource_blindness (P5-F-027/F-081-type)",
+          "worked_examples_added": [
+            "opt-in ctx guard / param added but never exercised / unwired degradation path -> verification_gap (stays)",
+            "ERR (403) recorded as hits: 0 -> precision_overclaim",
+            "documented record_id rule verifies 0/94 records -> spec_drift",
+            "thinking-mode burn against frozen max_tokens -> resource_blindness"
+          ]
+        },
+        {
+          "field": "cause_class",
+          "old_rule": "other:credential-exposure carried as PROPOSED class with 1 member",
+          "new_rule": "PROMOTED to full class credential_exposure: secret/credential exposed to observation without confirmed compromise; duty = rotation/hygiene; never reproduce the secret. Dual-classifier iteration-0 agreement 1.0 on the sole member (P5-F-033); proposed_classes_active now empty",
+          "worked_examples_added": [
+            "owner HF Read token visible on-screen during login setup, rotation recommended and still open -> credential_exposure"
+          ]
+        },
+        {
+          "field": "detection_layer",
+          "old_rule": "reviewer_caught = 'first caught by a separate context: adversarial reviewer, data steward, gatekeeper' (ambiguous for steward-own-tool cases)",
+          "new_rule": "clarified: a steward/reviewer-role agent catching defects in its OWN tooling is self_caught relative to that tool (the owner of the failed thing is whoever produced it); reviewer_caught requires a genuinely separate second context over the owner's artifact. Worked example added both ways (steward validator self-catch vs worker builder caught by reviewer audit). NOTE: this is classifier-1's proposed reading of the single iteration-0 detection split (P5-F-066); the iteration-1 kappa decides it",
+          "worked_examples_added": [
+            "steward's validator flags 3 FAILs that are all validator defects, caught on the steward's own rerun -> self_caught",
+            "worker's item-builder defect caught by the adversarial reviewer's scripted audit -> reviewer_caught"
+          ]
+        },
+        {
+          "field": "optional_modifiers",
+          "old_rule": "late detection lag recorded informally in cost.value/cost.note",
+          "new_rule": "late_detection modifier NOT added in iteration 1 (reviewer work order); schema-noted as an optional v1.1 candidate; do not emit the field yet",
+          "worked_examples_added": []
+        }
+      ],
+      "non_changes": [
+        "records.jsonl content and iteration-0 labels untouched (sha256 still 1566e7dc...bc456); iteration-1 labels for the 40 sample records are sealed separately in work-tmp/kappa-classifier1-iter1.jsonl pending the orchestrator's post-seal go",
+        "kappa-input-sample.jsonl unchanged (descriptions are the classification stimulus)",
+        "dataset VERSION stays 1.0; a label-promotion write to records.jsonl after the post-seal go will be dataset v1.1 under the SUBMISSION-FORMAT versioning policy"
+      ]
+    },
+    {
+      "revision": 2,
+      "date": "2026-09-15",
+      "from_taxonomy_version": "1.1",
+      "to_taxonomy_version": "1.2",
+      "schema_sha256_new": "c405368acd21462b5edebe6f197e5e693df7b0439c1795dbb1b55cb7ba461bac",
+      "scope": "phase field ONLY (cause_class and detection_layer passed iteration 1 and are unchanged)",
+      "decision_rule_changes": [
+        {
+          "field": "phase",
+          "old_rule": "verify belongs-list covered checking/measuring/recording instruments and their recorded outputs (registries/summaries/envelopes/proofs)",
+          "new_rule": "verify belongs-list extended: 'measured data products' added beside registries/summaries/envelopes/proofs - a recorded output of a measuring instrument is verify even when the defect originates in a degenerate computation",
+          "worked_examples_added": [
+            "NaN from degenerate 0/0 written into a recorded data product -> verify (recorded output; F-094-type)"
+          ]
+        },
+        {
+          "field": "phase",
+          "old_rule": "no explicit rule for capability/tool absence; v1.1 placed the WiX-type packaging gap in build (the blocked process reading)",
+          "new_rule": "R1: a capability/tool ABSENCE that BLOCKS an activity is ops - the defect lives in the environment; no defective agent artifact exists",
+          "worked_examples_added": [
+            "MSI packaging blocked because WiX is not installed -> ops (F-051-type; was build under v1.1)"
+          ]
+        },
+        {
+          "field": "phase",
+          "old_rule": "no explicit subject-anchoring rule for environment-degraded sessions vs false-claiming external artifacts",
+          "new_rule": "R2: anchor on the record's SUBJECT - a check session degraded by external conditions with controls intact -> verify; an obtained external artifact that is not what it claims -> ops",
+          "worked_examples_added": [
+            "rarity battery degraded by engine throttling/403s, positive controls intact -> verify (F-065-type)",
+            "external checkpoint failing its anchor gate because it does not match its claimed base twin -> ops (F-116-type)"
+          ]
+        },
+        {
+          "field": "phase",
+          "old_rule": "v1.1 instrument reading placed runner quota/cap enforcement defects in verify (runner as measurement instrument)",
+          "new_rule": "R3: a binding quota/cap mis-enforced by CODE is build - the enforcement logic is the defective artifact; the breach it allowed is evidence, not the defect",
+          "worked_examples_added": [
+            "per-judge day cap enforced per-class instead of cumulatively (smoke breached 11 vs 10) -> build (F-077-type; was verify under v1.1)"
+          ]
+        },
+        {
+          "field": "phase (application note, NO schema text change)",
+          "old_rule": "n/a",
+          "new_rule": "classifier APPLICATION ERROR recorded: the F-084 case (determinism proof embedding stale recorded hashes) was labeled build in iteration 1 although the v1.1 literal already assigned 'stale recorded hashes' in determinism proofs to verify. Self-corrected in iteration-2 labels; this is a classifier error, not a schema defect",
+          "worked_examples_added": []
+        }
+      ],
+      "precedence_note": "R1-R3 take precedence over the v1.1 generic instrument reading wherever they apply; encoded in the schema's phase description.",
+      "non_changes": [
+        "records.jsonl untouched through iteration 2 (sha256 1566e7dc...bc456); iteration-2 labels for the 40 sample records sealed separately in work-tmp/kappa-classifier1-iter2.jsonl pending the orchestrator's post-seal go",
+        "cause_class and detection_layer vocabularies unchanged from v1.1 (both passed iteration 1)",
+        "kappa-input-sample.jsonl unchanged"
+      ]
+    }
+  ],
+  "iteration_1": {
+    "status": "CLOSED - kappa computed by Reviewer-1; result recorded in iterations[1]",
+    "classifier_1_labels": {
+      "file": "glm/work/p5/work-tmp/kappa-classifier1-iter1.jsonl",
+      "sha256": "9006e044b99d2b002dc3fc6b05feb105356f4ac8be0fd6f48378ead6ce99aa85",
+      "sealed_utc": "2026-09-15T17:12:13Z"
+    },
+    "classifier_2_labels": {
+      "file": "sealed by orchestrator (not read by classifier-1)",
+      "sha256_prefix": "797100b1..."
+    },
+    "kappa": {
+      "cause_class": 0.9649,
+      "phase": 0.7922,
+      "detection_layer": 1.0
+    }
+  },
+  "iteration_2": {
+    "status": "CLOSED - PASS on all fields; post-seal label promotion executed (dataset v1.1)",
+    "classifier_1_labels": {
+      "file": "glm/work/p5/work-tmp/kappa-classifier1-iter2.jsonl",
+      "fields": ["record_id", "phase", "cause_class", "detection_layer"],
+      "n": 40,
+      "order": "same record_id order as kappa-input-sample.jsonl",
+      "schema_version_applied": "1.2",
+      "sha256": "59663be8179c78e4d61f3652edeab72ccde96dd8320acaff3681dcfa10dc26c6",
+      "sealed_utc": "2026-09-15T17:36:19Z",
+      "changes_vs_iteration_1_note": "classifier-1's own iteration-2 deltas under v1.2, recorded for the trail without exposing labels outside work-tmp: 5 of 40 labels changed phase (R1, R2-ops-side, R3, the measured-data-products extension, and the F-084 application-error self-correction); cause_class and detection_layer unchanged from iteration 1 for all 40"
+    },
+    "classifier_2_labels": {
+      "file": "sealed by orchestrator (review-tmp/kappa-classifier2-labels-iter2.jsonl; not read by classifier-1 before sealing)",
+      "sha256": "575e795d314a5e0061e8c863d27ef8a9d622ba60d8daeefce4c68e5a80d5646c"
+    },
+    "kappa": {
+      "cause_class": {"value": 0.9649, "agreement": "39/40 pre-adjudication"},
+      "phase": {"value": 1.0, "agreement": "40/40"},
+      "detection_layer": {"value": 1.0, "agreement": "40/40"}
+    }
+  },
+  "f043_adjudication": {
+    "record_id": "P5-F-043",
+    "question": "cause_class: classifier-1 environment_drift vs classifier-2 resource_blindness (the single iteration-2 cause split)",
+    "ruling": "resource_blindness (orchestrator, post-seal)",
+    "basis": "dominant root per tie-break rule 1; the record's own note identifies the pilot failure as the downstream consequence of the OOM spiral (P5-F-040)",
+    "disposition": "cause_class set to resource_blindness in records.jsonl at the v1.1 promotion; environment_drift retained in the record notes as the secondary frame; phase (ops) and detection_layer (self_caught) were already in perfect agreement"
+  },
+  "promotion": {
+    "authorized_by": "orchestrator post-seal go (Reviewer-1 verdict: PASS)",
+    "executed_utc": "2026-09-15",
+    "dataset_version": "1.1",
+    "actions": [
+      "40 sample records promoted to the agreed iter-2 cells (join of classifier-1 and classifier-2 iteration-2 label files, identical on all three fields after the F-043 adjudication)",
+      "65 unsampled records re-labeled by classifier-1 under taxonomy v1.2 (consistent with the iter-2 deltas): phase re-anchoring per R1/R2/R3 and the measured-data-products rule, document-defect causes to spec_drift, corpus-wide F-084-class application-error fix (determinism-proof-like recorded outputs -> verify)",
+      "other:credential-exposure -> credential_exposure string flip applied everywhere; zero 'other:' labels remain",
+      "34 of 105 records changed labels in total; 71 were already at their v1.2 labels"
+    ],
+    "records_jsonl_sha256_v1.0": "1566e7dcdf7a0a0b8445b91c642d420638cf1f8dc5ffde7626dca5f068bbc456",
+    "records_jsonl_sha256_v1.1": "6c10e35767fceaadc5091e745876293b702f66d33062c31267547b6ef510a3ee",
+    "determinism": "v1.1 records.jsonl rebuilt twice, byte-identical; external_check expected digest updated to the v1.1 value with the v1.0 sidecar mismatch documented by design",
+    "result": "protocol satisfied in 2 revisions - kappa trajectory: iteration 0 = 0.728 / 0.458 / 0.946 -> iteration 1 = 0.965 / 0.792 / 1.000 -> iteration 2 = 0.965 / 1.000 / 1.000 (cause_class / phase / detection_layer)"
+  }
+}

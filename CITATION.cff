@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below."
+title: "Failure Taxonomy of an Agent-Run Research Lab: 105 Documented Process Failures, Who Caught Them, and an Open Dataset"
+authors:
+  - family-names: Casey
+    given-names: Kiyoshi
+    affiliation: "321 AI Labs"
+    orcid: "https://orcid.org/0009-0006-6256-9325"
+version: 1.1
+date-released: 2026-10-16
+license: "research-use-only"
+url: "https://321ai.xyz/studies/agent-lab-failure-taxonomy-dataset/"
+notes: "Zenodo DOI pending; backfill after the v1.0.0 release cut mints it."
