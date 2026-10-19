@@ -37,4 +37,8 @@ for the license note and per-record provenance.
 
 ## Citation
 
-See `CITATION.cff`. The report DOI backfills here once Zenodo mints it.
+See `CITATION.cff`.
+
+- Dataset DOI (all versions): https://doi.org/10.5281/zenodo.23458362
+- Dataset DOI (v1.0.0): https://doi.org/10.5281/zenodo.23458363
+- Preprint: SSRN, submitted 2026-10-18 (moderation pending)
