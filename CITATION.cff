@@ -8,5 +8,12 @@ authors:
     orcid: "https://orcid.org/0009-0006-6256-9325"
 version: 1.1
 date-released: 2026-10-16
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23458362
+    description: "Concept DOI (all versions)"
+  - type: doi
+    value: 10.5281/zenodo.23458363
+    description: "Version DOI (v1.0.0)"
 url: "https://321ai.xyz/studies/agent-lab-failure-taxonomy-dataset/"
-notes: "Zenodo DOI pending; backfill after the v1.0.0 release cut mints it."
+notes: "Zenodo DOI minted 2026-10-18 from the v1.0.0 GitHub release. Preprint route is SSRN per owner ruling 2026-10-18 (no OSF/MetaArXiv)."
